@@ -1,5 +1,5 @@
 # ListViewHeaderFooter
-![图1](https://github.com/18Gray/ListViewHeaderFooter/blob/master/img/1.jpg  =100x20) 
+![图1](https://github.com/18Gray/ListViewHeaderFooter/blob/master/img/1.jpg =100x20) 
 
 所有方案分为两类，第一类是ScrollView里面嵌套ListView，包括自定义ListView、手动设置ListView高度、自定义LinearLayout模拟ListView三种实现方法；第二类是只用ListView，包括自定义Adapter、用addHeaderView和addFooterView。一共五种方案，最佳方案是用addHeaderView和addFooterView。
 
@@ -7,7 +7,7 @@
 主要就是重载了onMeasure方法，改变了heightMeasureSpec。这里widthMeasureSpec和heightMeasureSpec用了32位的int作为参数，高2位代表模式，有三种UNSPECIFIED、EXACTLY、AT_MOST，这是自定义View的基础知识。低30位代表数值。MeasureSpec.makeMeasureSpec函数中第一个参数是高度的值，第二个参数是模式，makeMeasureSpec则是把模式和值合成为一个int值，这里赋给了高度。Integer.MAX_VALUE >> 2是int类型取30位时的最大整数，即Integer.MAX_VALUE是int的最大32位值，再右移2位，就是30位，同样是最大值，只不过是30位的最大值，所以在模式上也只能选择MeasureSpec.AT_MOST。最终这个ListView的显示高度会是其能显示出来的最大值，所有的条目都会显示出来。
 优点：写法简单，不影响ListView使用。
 缺点：由于高度设置成最大值，所有条目都会进行绘制，只是有些条目会在屏幕之外。举个例子，我传递的数据有20条，但是屏幕只够显示10条，此时用自定义的ListView会调用20次getView把所有条目都绘制出来，完全放弃了ListView的复用机制，跟直接写布局没有什么区别了，会造成页面加载速度缓慢的问题。另外，ListView高度必须设置成match_parent。
-![图2](https://github.com/18Gray/ListViewHeaderFooter/blob/master/img/2.png  =100x20)
+![图2](https://github.com/18Gray/ListViewHeaderFooter/blob/master/img/2.png =100x20)
 
 ## 2.手动设置ListView高度
 去获取每个条目的View高度，然后所有子View高度相加得到总高度，并设置给ListView的LayoutParams。
